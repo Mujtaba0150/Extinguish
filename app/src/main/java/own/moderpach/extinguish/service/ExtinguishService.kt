@@ -812,6 +812,11 @@ class ExtinguishService : LifecycleService() {
     private fun registerSystemLockReceiver() {
         systemLockReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
+                // ACTION_SCREEN_OFF fires on every real screen-off event, not just the ones
+                // Extinguish itself triggered (e.g. a normal screen timeout or manually locking
+                // the device). Only restore brightness/hosts if Extinguish had actually put the
+                // screen into its virtual "off" state
+                if (screenState.value != ScreenState.Off) return
                 lifecycleScope.launch(Dispatchers.Main) {
                     screenControlMutex.withLock {
                         displayControlService?.setBrightnessToSetting(recordBrightness)
