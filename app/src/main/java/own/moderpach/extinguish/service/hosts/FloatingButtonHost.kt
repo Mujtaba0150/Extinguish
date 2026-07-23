@@ -94,7 +94,8 @@ class FloatingButtonHost<T>(
         floatingButtonWindow?.let {
             val updatingFeature = with(feature) {
                 FloatingButtonWindow.Feature(
-                    autoMoveToEdge, fadeWhenUnused, fadeTransparency, blackStyle,showTimerButton, mergeTimerButton
+                    autoMoveToEdge, fadeWhenUnused, fadeTransparency, blackStyle,
+                    showTimerButton, mergeTimerButton
                 )
             }
             it.updateFeature(updatingFeature)

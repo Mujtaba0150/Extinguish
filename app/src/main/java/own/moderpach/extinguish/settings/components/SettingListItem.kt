@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import own.moderpach.extinguish.ui.components.ExtinguishListItem
 import kotlin.math.roundToInt
 
@@ -27,15 +28,21 @@ fun SettingListItemWithSwitch(
     headline: String,
     supporting: String? = null,
     checked: Boolean,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit,
 ) = SettingListItem(
-    modifier, headline, supporting,
+    // Dim the whole row, not just the switch, so it visually reads as unavailable rather than
+    // just having a disabled-looking switch next to otherwise-normal text.
+    modifier = if (enabled) modifier
+    else modifier.alpha(0.38f),
+    headline = headline,
+    supporting = supporting,
     trailingContent = {
-        Switch(checked, onCheckedChange)
+        Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
     },
-    onClick = {
-        onCheckedChange(!checked)
-    }
+    onClick = if (enabled) {
+        { onCheckedChange(!checked) }
+    } else null
 )
 
 @Composable

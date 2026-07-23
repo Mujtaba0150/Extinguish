@@ -16,24 +16,26 @@ fun WindowManager.LayoutParams.setFlags(flags: Int, mask: Int) {
     this.flags = this.flags and mask.inv() or (flags and mask)
 }
 
+@Suppress("DEPRECATION")
 fun getScreenRect(windowManager: WindowManager) =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val r = Rect()
-        r.set(windowManager.maximumWindowMetrics.bounds)
-        r
-    } else {
-        val r = Rect()
-        windowManager.defaultDisplay.getRectSize(r)
-        r
-    }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val r = Rect()
+            r.set(windowManager.maximumWindowMetrics.bounds)
+            r
+        } else {
+            val r = Rect()
+            windowManager.defaultDisplay.getRectSize(r)
+            r
+        }
 
+@Suppress("DEPRECATION")
 fun WindowManager.getScreenRectNew() =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        val r = Rect()
-        r.set(this.maximumWindowMetrics.bounds)
-        r
-    } else {
-        val r = Rect()
-        this.defaultDisplay.getRectSize(r)
-        r
-    }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val r = Rect()
+            r.set(this.maximumWindowMetrics.bounds)
+            r
+        } else {
+            val r = Rect()
+            this.defaultDisplay.getRectSize(r)
+            r
+        }

@@ -23,13 +23,13 @@ class DisplayControlService : IDisplayControl.Stub() {
     private val shLock = Object()
     private var _shProcess: Process? = null
     val shProcess: Process
-        get() = synchronized(shLock) {
-            if (_shProcess?.isAlive == true) _shProcess
-            Runtime.getRuntime().exec(arrayOf("sh")).also {
-                _shProcess = it
-            }
-        }
+        get() =
+                synchronized(shLock) {
+                    if (_shProcess?.isAlive == true) _shProcess
+                    Runtime.getRuntime().exec(arrayOf("sh")).also { _shProcess = it }
+                }
 
+    @Suppress("DEPRECATION")
     private fun getPrimaryPhysicalDisplayToken(): IBinder {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             val primaryPhysicalDisplayId = DisplayControlProxy.getPhysicalDisplayIds()[0]
@@ -44,9 +44,7 @@ class DisplayControlService : IDisplayControl.Stub() {
     override fun setPowerModeToSurfaceControl(mode: Int): UnitResult {
         try {
             val displayToken = getPrimaryPhysicalDisplayToken()
-            SurfaceControlProxy.setDisplayPowerMode(
-                displayToken, mode
-            )
+            SurfaceControlProxy.setDisplayPowerMode(displayToken, mode)
         } catch (e: Exception) {
             return UnitResult.Err(e)
         }
@@ -56,9 +54,7 @@ class DisplayControlService : IDisplayControl.Stub() {
     override fun setBrightnessToSurfaceControl(brightness: Float): UnitResult {
         try {
             val displayToken = getPrimaryPhysicalDisplayToken()
-            SurfaceControlProxy.setDisplayBrightness(
-                displayToken, brightness
-            )
+            SurfaceControlProxy.setDisplayBrightness(displayToken, brightness)
         } catch (e: Exception) {
             return UnitResult.Err(e)
         }
@@ -76,9 +72,7 @@ class DisplayControlService : IDisplayControl.Stub() {
 
     override fun setBrightnessModeToSetting(mode: Int): UnitResult {
         if (mode != BRIGHTNESS_MODE_MANUAL && mode != BRIGHTNESS_MODE_AUTO) {
-            return UnitResult.Err(
-                IllegalArgumentException("mode should be 0 or 1")
-            )
+            return UnitResult.Err(IllegalArgumentException("mode should be 0 or 1"))
         }
         val output = shProcess.outputStream
         synchronized(shLock) {
@@ -96,5 +90,4 @@ class DisplayControlService : IDisplayControl.Stub() {
         }
         exitProcess(0)
     }
-
 }
